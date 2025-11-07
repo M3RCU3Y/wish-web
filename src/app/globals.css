@@ -37,6 +37,7 @@
   --dur-fast: 140ms;
   --dur-med: 240ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sr-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
@@ -190,6 +191,82 @@ body {
   }
 }
 
+/* ===== Scroll reveal (sitewide) ===== */
+html:not(.sr-enabled) .sr-init {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+html.sr-enabled .sr-init {
+  opacity: 0;
+  transform: translate3d(0, 38px, 0) scale(0.985);
+  filter: blur(18px);
+  transition:
+    opacity 900ms var(--sr-ease) var(--sr-delay, 0ms),
+    transform 950ms var(--sr-ease) var(--sr-delay, 0ms),
+    filter 950ms var(--sr-ease) var(--sr-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+html.sr-enabled .sr-show {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.sr-enabled .sr-init {
+    transform: none;
+    filter: none;
+    transition: opacity 300ms ease-out var(--sr-delay, 0ms);
+  }
+}
+
+/* ===== Frosted bottom overlay utilities ===== */
+.frost-blur {
+  -webkit-backdrop-filter: blur(30px) saturate(140%) brightness(1.05);
+  backdrop-filter: blur(30px) saturate(140%) brightness(1.05);
+}
+.frost-noise {
+  /* ultra-subtle grain to avoid banding in large gradients */
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.04) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.035) 50%, transparent 51%),
+    radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.03) 50%, transparent 51%);
+  background-size: 600px 600px;
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+}
+
+.section-scrim {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 25;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 78%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 78%);
+}
+.section-scrim__blur,
+.section-scrim__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.section-scrim__blur {
+  -webkit-backdrop-filter: blur(34px) saturate(140%);
+  backdrop-filter: blur(34px) saturate(140%);
+  background: linear-gradient(0deg, rgba(6, 10, 27, 0.5), rgba(6, 10, 27, 0));
+}
+.section-scrim__glow {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(123, 103, 255, 0.25), transparent 55%),
+    radial-gradient(circle at 20% 120%, rgba(56, 192, 181, 0.2), transparent 60%);
+  opacity: 0.4;
+  mix-blend-mode: screen;
+}
+
 /* ===== Layout utilities (HOME) ===== */
 :root {
   --container-max: 1600px;
@@ -293,7 +370,10 @@ body {
 
 /* Hero height */
 .hero {
-  padding-block: clamp(3rem, 10vh, 14vh);
+  --hero-pt: clamp(2.75rem, 6vw, 5.5rem);
+  --hero-pb: clamp(4.5rem, 12vh, 15vh);
+  padding-top: var(--hero-pt);
+  padding-bottom: var(--hero-pb);
   min-height: 85vh;
   display: flex;
   align-items: center;
@@ -318,6 +398,41 @@ body {
     radial-gradient(1px 1px at 80% 20%, #ffffff55 50%, transparent 51%);
   background-repeat: repeat;
   background-size: 800px 800px;
+}
+.aurora-bottom-blur {
+  position: fixed;
+  inset-inline: -5%;
+  bottom: -6vh;
+  height: clamp(16rem, 40vh, 32rem);
+  pointer-events: none;
+  z-index: 10;
+}
+.aurora-bottom-blur::before,
+.aurora-bottom-blur::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: clamp(4rem, 12vw, 6rem);
+}
+.aurora-bottom-blur::before {
+  background: rgba(8, 12, 28, 0.18);
+  -webkit-backdrop-filter: blur(90px) saturate(140%) brightness(1.05);
+  backdrop-filter: blur(90px) saturate(140%) brightness(1.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 25%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 25%, transparent 85%);
+}
+.aurora-bottom-blur::after {
+  background:
+    radial-gradient(65% 55% at 50% 0%, rgba(92, 205, 255, 0.16), transparent 60%),
+    radial-gradient(75% 50% at 15% 65%, rgba(56, 192, 181, 0.14), transparent 65%),
+    radial-gradient(70% 50% at 85% 65%, rgba(138, 123, 253, 0.16), transparent 65%);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  filter: blur(18px);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 90%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 90%);
 }
 
 .notes-card {

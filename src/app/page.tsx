@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { org, programs, publications, highlightCTA } from "@/data/site";
 import { GlassCard } from "@/components/ui/glass-card";
+import { SectionBottomScrim } from "@/components/section-scrim";
+import { FadeReveal } from "@/components/reveal";
 
 const heroStats = [
   {
@@ -30,8 +32,9 @@ export default function Home() {
 
   return (
     <div className="space-y-[var(--pad-section)] pb-[var(--pad-section)]">
-      <section className="hero band band--aurora">
-        <div className="grid-12 items-start gap-10">
+      <section className="hero band band--aurora relative">
+        <FadeReveal>
+          <div className="grid-12 items-start gap-10">
           <div className="col-span-12 xl:col-span-7 space-y-8">
             <p className="text-xs tracking-[0.25em] text-sky-300/90 mb-4">
               W.I.S.H. • Women in Science for Hope
@@ -39,17 +42,18 @@ export default function Home() {
             <h1 className="hero-title prose-max mb-6 text-text-hi">
               Wonder under the night sky. Care in every home.
             </h1>
-            <p className="text-text-lo max-w-2xl mb-8">
+            <p className="text-text-lo max-w-2xl leading-relaxed">
               Founded in {org.founded}, WISH supports children’s homes with seasonal drives, science month activities,
               and the annual <em>WISH Upon a Star</em> magazine—created and delivered by volunteers.
             </p>
-            <div className="space-y-4">
+
+            <div className="mt-6 space-y-5 lg:mt-8 lg:space-y-6">
               <p className="text-xs font-semibold tracking-[0.3em] text-text-lo">
                 Impact in motion
               </p>
-              <ul className="grid gap-4 sm:grid-cols-2">
+              <ul className="grid gap-y-6 gap-x-8 sm:grid-cols-2">
                 {heroStats.map((stat) => (
-                  <li key={stat.label} className="space-y-1">
+                  <li key={stat.label} className="space-y-2">
                     <p className="text-3xl font-serif text-text-hi">{stat.value}</p>
                     <p className="text-xs uppercase tracking-[0.3em] text-text-lo">
                       {stat.label}
@@ -79,12 +83,15 @@ export default function Home() {
               <span className="sr-only">Future carousel placeholder</span>
             </GlassCard>
           </aside>
-        </div>
+          </div>
+        </FadeReveal>
+        <SectionBottomScrim />
       </section>
 
-      <section className="section">
-        <div className="container space-y-8">
-          <div>
+      <section className="section relative">
+        <FadeReveal>
+          <div className="container space-y-8">
+            <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
               Annual rhythm
             </p>
@@ -95,29 +102,34 @@ export default function Home() {
               Everything grows by word-of-mouth: volunteers gather supplies, deliver them, and listen to what homes ask
               for next.
             </p>
+            </div>
+            <div className="grid gap-10 lg:grid-cols-2">
+              {programs.map((program, idx) => (
+                <FadeReveal key={program.id} delay={idx * 0.08} amount={0.25}>
+                  <article className="space-y-4 border-t border-white/15 pt-6">
+                    <div className="flex flex-wrap items-center justify-between gap-4 text-text-lo">
+                      <h3 className="font-serif text-2xl text-text-hi">{program.title}</h3>
+                      <span className="text-xs uppercase tracking-[0.3em]">{program.when}</span>
+                    </div>
+                    <p className="text-sm text-text-lo">{program.summary}</p>
+                    <ul className="list-disc space-y-1 pl-5 text-sm text-text-lo/90">
+                      {program.bullets.map((bullet) => (
+                        <li key={bullet}>{bullet}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </FadeReveal>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-10 lg:grid-cols-2">
-            {programs.map((program) => (
-              <article key={program.id} className="space-y-4 border-t border-white/15 pt-6">
-                <div className="flex flex-wrap items-center justify-between gap-4 text-text-lo">
-                  <h3 className="font-serif text-2xl text-text-hi">{program.title}</h3>
-                  <span className="text-xs uppercase tracking-[0.3em]">{program.when}</span>
-                </div>
-                <p className="text-sm text-text-lo">{program.summary}</p>
-                <ul className="list-disc space-y-1 pl-5 text-sm text-text-lo/90">
-                  {program.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </div>
+        </FadeReveal>
+        <SectionBottomScrim />
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="pub-highlight">
+      <section className="section relative">
+        <FadeReveal>
+          <div className="container">
+            <div className="pub-highlight">
             <div className="pub-highlight__art" aria-hidden>
               <div className="pub-highlight__beam" />
             </div>
@@ -145,13 +157,16 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            </div>
           </div>
-        </div>
+        </FadeReveal>
+        <SectionBottomScrim height={"clamp(4.5rem, 12vw, 10rem)"} tint={0.18} />
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="notes-card">
+      <section className="section relative">
+        <FadeReveal>
+          <div className="container">
+            <div className="notes-card">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-lo">
               Notes from the field
             </p>
@@ -163,8 +178,10 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            </div>
           </div>
-        </div>
+        </FadeReveal>
+        <SectionBottomScrim height={"clamp(4.5rem, 12vw, 10rem)"} tint={0.16} />
       </section>
     </div>
   );

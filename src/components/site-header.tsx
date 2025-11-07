@@ -8,7 +8,7 @@ import { StarfieldConstellation } from "@/components/starfield";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-gradient-to-b from-canvas/95 via-canvas/80 to-transparent backdrop-blur-2xl relative overflow-hidden">
+    <header className="sticky top-0 z-30 relative overflow-hidden border-b border-white/10 backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/35 bg-canvas/55 shadow-[0_20px_45px_rgba(2,6,23,0.55)]">
       {/* Constellation sky in the header bar background (not over buttons) */}
       <StarfieldConstellation
         className="opacity-75"
