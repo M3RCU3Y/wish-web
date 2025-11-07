@@ -32,17 +32,33 @@ export default function Home() {
     <div className="space-y-[var(--pad-section)] pb-[var(--pad-section)]">
       <section className="hero band band--aurora">
         <div className="grid-12 items-start gap-10">
-          <div className="col-span-12 xl:col-span-7">
+          <div className="col-span-12 xl:col-span-7 space-y-8">
             <p className="text-xs tracking-[0.25em] text-sky-300/90 mb-4">
-              W.I.S.H. · Women in Science for Hope
+              W.I.S.H. • Women in Science for Hope
             </p>
             <h1 className="hero-title prose-max mb-6 text-text-hi">
-              Science kits, mentorship, and joyful outreach for children across Trinidad & Tobago.
+              Wonder under the night sky. Care in every home.
             </h1>
             <p className="text-text-lo max-w-2xl mb-8">
               Founded in {org.founded}, WISH supports children’s homes with seasonal drives, science month activities,
               and the annual <em>WISH Upon a Star</em> magazine—created and delivered by volunteers.
             </p>
+            <div className="space-y-4">
+              <p className="text-xs font-semibold tracking-[0.3em] text-text-lo">
+                Impact in motion
+              </p>
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {heroStats.map((stat) => (
+                  <li key={stat.label} className="space-y-1">
+                    <p className="text-3xl font-serif text-text-hi">{stat.value}</p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-text-lo">
+                      {stat.label}
+                    </p>
+                    <p className="text-sm text-text-lo">{stat.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="flex flex-wrap gap-3 text-sm">
               <Link className="btn-cta" href={highlightCTA.donate.href}>
                 Donate
@@ -59,21 +75,8 @@ export default function Home() {
             </div>
           </div>
           <aside className="col-span-12 xl:col-span-5">
-            <GlassCard className="p-6 space-y-4">
-              <p className="text-xs font-semibold tracking-[0.3em] text-text-lo">
-                Impact in motion
-              </p>
-              <ul className="grid gap-4 sm:grid-cols-2">
-                {heroStats.map((stat) => (
-                  <li key={stat.label} className="space-y-1">
-                    <p className="text-3xl font-serif text-text-hi">{stat.value}</p>
-                    <p className="text-xs uppercase tracking-[0.3em] text-text-lo">
-                      {stat.label}
-                    </p>
-                    <p className="text-sm text-text-lo">{stat.detail}</p>
-                  </li>
-                ))}
-              </ul>
+            <GlassCard className="min-h-[320px] bg-gradient-to-br from-slate-900/50 via-slate-800/20 to-slate-900/60">
+              <span className="sr-only">Future carousel placeholder</span>
             </GlassCard>
           </aside>
         </div>
