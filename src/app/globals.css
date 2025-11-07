@@ -125,3 +125,189 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ===== Layout utilities (HOME) ===== */
+:root {
+  --container-max: 1600px;
+  --section-y: clamp(2.8rem, 7.5vw, 7rem);
+}
+
+/* Section rhythm & centered container */
+.section {
+  padding-block: var(--section-y);
+}
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+/* Full-bleed band with true edge gutters */
+.band {
+  width: 100%;
+  padding-inline: clamp(1.5rem, 6vw, 7rem);
+}
+.band--aurora {
+  position: relative;
+  isolation: isolate;
+}
+.band--aurora::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      1200px 600px at 12% 10%,
+      rgba(138, 123, 253, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      1200px 600px at 88% 90%,
+      rgba(56, 192, 181, 0.2),
+      transparent 60%
+    );
+}
+.band--aurora > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 12-col grid helper */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 32px);
+}
+
+/* Type rhythm */
+.prose-max {
+  max-width: 72ch;
+}
+.lead {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+}
+
+/* Card weights */
+.card {
+  border-radius: 22px;
+  background: color-mix(in oklab, rgba(16, 22, 43, 0.72) 85%, transparent);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.card--quiet {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Hero height */
+.hero {
+  padding-block: clamp(3rem, 10vh, 14vh);
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Aurora background helpers */
+.aurora-blob {
+  background: transparent;
+}
+.aurora-blob--indigo {
+  background: radial-gradient(60% 60% at 50% 50%, #1b3a8a55 0%, transparent 60%);
+}
+.aurora-blob--violet {
+  background: radial-gradient(60% 60% at 50% 50%, #8a7bfd55 0%, transparent 60%);
+}
+.aurora-blob--teal {
+  background: radial-gradient(60% 60% at 50% 50%, #38c0b555 0%, transparent 60%);
+}
+.aurora-stars {
+  background-image: radial-gradient(1px 1px at 20% 30%, #ffffff55 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 70%, #ffffff55 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 20%, #ffffff55 50%, transparent 51%);
+  background-repeat: repeat;
+  background-size: 800px 800px;
+}
+
+.notes-card {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 8, 22, 0.7);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+}
+.notes-card li + li {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.pub-highlight {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border-radius: 36px;
+  background: linear-gradient(135deg, #141b3b 0%, #070a18 65%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .pub-highlight {
+    grid-template-columns: 320px 1fr;
+    align-items: center;
+  }
+}
+.pub-highlight__art {
+  position: relative;
+  border-radius: 28px;
+  padding: 2rem;
+  background: radial-gradient(circle at 30% 20%, rgba(117, 180, 255, 0.55), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(135, 106, 255, 0.55), transparent 60%),
+    linear-gradient(135deg, #0b1020, #060b1c);
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.05), 0 40px 60px rgba(2, 6, 23, 0.65);
+  min-height: 360px;
+}
+.pub-highlight__beam {
+  position: absolute;
+  top: 10%;
+  left: 42%;
+  width: 70px;
+  height: 80%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(138, 123, 253, 0.1));
+  filter: blur(1px);
+}
+.pub-highlight__art::before,
+.pub-highlight__art::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transform: rotate(-12deg);
+  opacity: 0.65;
+}
+.pub-highlight__art::after {
+  inset: 18%;
+  transform: rotate(18deg);
+}
+.pub-highlight__copy p {
+  color: var(--text-lo);
+  line-height: 1.7;
+}
+.pub-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.pub-pill {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}

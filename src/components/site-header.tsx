@@ -6,7 +6,7 @@ import { org, highlightCTA } from "@/data/site";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-gradient-to-b from-canvas/95 via-canvas/80 to-transparent backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-6xl px-6 py-5 lg:px-10">
+      <div className="w-full px-8 py-5">
         <div className="flex flex-wrap items-center gap-4">
           <Link href="/" className="flex min-w-[220px] flex-1 flex-col">
             <span className="text-xs font-semibold tracking-[0.4em] text-sky-300">
@@ -44,4 +44,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

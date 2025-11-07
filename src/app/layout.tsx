@@ -34,7 +34,7 @@ export default function RootLayout({
         <AuroraBG />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
-          <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-[var(--pad-section)] lg:px-10">
+          <main className="flex-1 w-full py-[var(--pad-section)]">
             {children}
           </main>
           <SiteFooter />

@@ -7,7 +7,7 @@ export function SiteFooter() {
   return (
     <footer className="relative mt-[var(--pad-section)] border-t border-white/10 bg-[#070c1f]/90">
       <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-brand-cta/60 to-transparent" />
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 text-sm text-text-lo md:grid-cols-3 lg:px-10">
+      <div className="grid w-full gap-10 px-8 py-12 text-sm text-text-lo md:grid-cols-3">
         <div className="space-y-4">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
             Stay curious
@@ -69,4 +69,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
