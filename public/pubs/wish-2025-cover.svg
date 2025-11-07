@@ -1,0 +1,26 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>WISH Upon a Star 2025 cover art</title>
+  <desc>Gradient aurora backdrop with soft orbs and diagonal beams.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#120f34" />
+      <stop offset="45%" stop-color="#1b3a8a" />
+      <stop offset="100%" stop-color="#0b1020" />
+    </linearGradient>
+    <radialGradient id="orb" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38c0b5" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#38c0b5" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e3b341" stop-opacity="0.65" />
+      <stop offset="100%" stop-color="#e3b341" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)" />
+  <circle cx="200" cy="220" r="220" fill="url(#orb)" />
+  <circle cx="620" cy="180" r="180" fill="#8a7bfd33" />
+  <path d="M480 -50 L620 -50 L320 1050 L180 1050 Z" fill="url(#beam)" opacity="0.7" />
+  <path d="M-40 680 C160 520 360 720 520 540 C640 410 780 470 850 340 L850 1050 L-40 1050 Z" fill="#38c0b512" />
+  <circle cx="620" cy="700" r="260" fill="#8a7bfd22" />
+  <circle cx="260" cy="780" r="180" fill="#e3b34111" />
+</svg>

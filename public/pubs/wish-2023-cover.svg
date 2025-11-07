@@ -1,0 +1,32 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>WISH Upon a Star 2023 cover art</title>
+  <desc>Futuristic gradient with diagonal grid and starbursts.</desc>
+  <defs>
+    <linearGradient id="bg23" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050a23" />
+      <stop offset="40%" stop-color="#111c4a" />
+      <stop offset="100%" stop-color="#01040f" />
+    </linearGradient>
+    <linearGradient id="grid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc33" />
+      <stop offset="100%" stop-color="#8a7bfd22" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg23)" />
+  <g opacity="0.4" stroke="url(#grid)" stroke-width="1">
+    <path d="M0 200 L800 1000" />
+    <path d="M-100 120 L700 1000" />
+    <path d="M100 0 L900 880" />
+    <path d="M-60 340 L580 1000" />
+    <path d="M240 0 L1040 840" />
+  </g>
+  <circle cx="200" cy="280" r="200" fill="#8a7bfd33" />
+  <circle cx="640" cy="360" r="240" fill="#38c0b522" />
+  <circle cx="420" cy="780" r="260" fill="#e3b34111" />
+  <g fill="#fef3c7">
+    <circle cx="120" cy="180" r="4" />
+    <circle cx="560" cy="120" r="3" />
+    <circle cx="700" cy="460" r="5" />
+    <circle cx="260" cy="640" r="3" />
+  </g>
+</svg>

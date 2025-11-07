@@ -1,0 +1,25 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>WISH Upon a Star 2024 cover art</title>
+  <desc>Nature inspired gradient with botanical strokes.</desc>
+  <defs>
+    <linearGradient id="bg24" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1f2c" />
+      <stop offset="60%" stop-color="#0f3b2f" />
+      <stop offset="100%" stop-color="#031423" />
+    </linearGradient>
+    <radialGradient id="orb24" cx="30%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#7dd3fc" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a0f0c5" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#38c0b5" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg24)" />
+  <circle cx="520" cy="220" r="260" fill="url(#orb24)" />
+  <path d="M-20 840 C120 640 360 720 480 520 C620 320 760 400 860 200 L860 1000 L-20 1000 Z" fill="#38c0b522" />
+  <path d="M120 980 C200 760 420 640 520 420 C600 250 640 160 760 60" stroke="url(#leaf)" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" opacity="0.35" />
+  <circle cx="180" cy="320" r="140" fill="#e3b34122" />
+  <circle cx="640" cy="720" r="210" fill="#8a7bfd11" />
+</svg>
