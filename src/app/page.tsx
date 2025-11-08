@@ -3,8 +3,8 @@ import Link from "next/link";
 import { org, programs, publications, highlightCTA } from "@/data/site";
 import { GlassCard } from "@/components/ui/glass-card";
 import { SectionBottomScrim } from "@/components/section-scrim";
-import { AuroraFocusGate } from "@/components/aurora-focus-gate";
 import { FadeReveal } from "@/components/reveal";
+import type { CSSProperties } from "react";
 
 const heroStats = [
   {
@@ -52,6 +52,8 @@ const fieldHighlights = [
     icon: "🛰️",
   },
 ];
+
+const programAccents = ["#5dd1ff", "#8a7bfd", "#40c9b6", "#f4a2ff", "#f7b84a"];
 
 export default function Home() {
   const featuredPublication = [...publications].sort((a, b) => b.year - a.year)[0];
@@ -119,40 +121,53 @@ export default function Home() {
         <SectionBottomScrim />
       </section>
 
-      <AuroraFocusGate />
-
       <section className="section relative">
         <FadeReveal>
           <div className="container space-y-8">
-            <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
-              Annual rhythm
-            </p>
-            <h2 className="mb-3 font-serif text-3xl text-text-hi">
-              Seasonal drives, science month, and special care.
-            </h2>
-            <p className="text-text-lo">
-              Everything grows by word-of-mouth: volunteers gather supplies, deliver them, and listen to what homes ask
-              for next.
-            </p>
+            <div className="programs-header">
+              <div className="programs-divider">
+                <span />
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
+                  Annual rhythm
+                </p>
+                <span />
+              </div>
+              <div className="space-y-3">
+                <h2 className="font-serif text-3xl text-text-hi">
+                  Seasonal drives, science month, and special care.
+                </h2>
+                <p className="text-text-lo">
+                  Everything grows by word-of-mouth: volunteers gather supplies, deliver them, and listen to what homes ask
+                  for next.
+                </p>
+              </div>
             </div>
-            <div className="grid gap-10 lg:grid-cols-2">
-              {programs.map((program, idx) => (
+
+            <div className="programs-grid">
+              {programs.map((program, idx) => {
+                const accentColor = programAccents[idx % programAccents.length];
+                const style = { "--program-card-accent": accentColor } as CSSProperties;
+
+                return (
                 <FadeReveal key={program.id} delay={idx * 0.08} amount={0.25}>
-                  <article className="space-y-4 border-t border-white/15 pt-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4 text-text-lo">
+                  <article className="programs-card" style={style}>
+                    <div className="programs-card__header">
                       <h3 className="font-serif text-2xl text-text-hi">{program.title}</h3>
-                      <span className="text-xs uppercase tracking-[0.3em]">{program.when}</span>
+                      <span className="programs-card__when">{program.when}</span>
                     </div>
-                    <p className="text-sm text-text-lo">{program.summary}</p>
-                    <ul className="list-disc space-y-1 pl-5 text-sm text-text-lo/90">
-                      {program.bullets.map((bullet) => (
-                        <li key={bullet}>{bullet}</li>
-                      ))}
-                    </ul>
+                    <div className="programs-card__body">
+                      <p className="programs-card__summary">{program.summary}</p>
+                      <ul className="programs-card__bullets">
+                        {program.bullets.map((bullet) => (
+                          <li key={bullet}>{bullet}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="programs-card__tagline">Seasonal care in motion</div>
                   </article>
                 </FadeReveal>
-              ))}
+                );
+              })}
             </div>
           </div>
         </FadeReveal>
