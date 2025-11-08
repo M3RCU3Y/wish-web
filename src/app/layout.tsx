@@ -33,7 +33,6 @@ export default function RootLayout({
         className={`${manrope.variable} ${fraunces.variable} antialiased bg-canvas text-text-hi`}
       >
         <AuroraBG />
-        <div aria-hidden className="aurora-bottom-blur" />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1 w-full pb-[var(--pad-section)]">

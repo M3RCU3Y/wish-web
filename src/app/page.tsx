@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { org, programs, publications, highlightCTA } from "@/data/site";
 import { GlassCard } from "@/components/ui/glass-card";
 import { SectionBottomScrim } from "@/components/section-scrim";
+import { AuroraFocusGate } from "@/components/aurora-focus-gate";
 import { FadeReveal } from "@/components/reveal";
 
 const heroStats = [
@@ -27,8 +29,37 @@ const heroStats = [
   },
 ];
 
+const fieldHighlights = [
+  {
+    title: "Print-first magazine reach",
+    detail:
+      "WISH Upon a Star is handcrafted each year and hand-delivered to children’s homes—no wifi, just volunteers and curiosity.",
+    tag: "Magazine",
+    icon: "📘",
+  },
+  {
+    title: "Community care & recognition",
+    detail:
+      "Offline by design, powered by volunteers, and recognized with the UWI Principal’s Research Award after refurbishing the Swaha Vishok Bhavan park.",
+    tag: "Awarded",
+    icon: "✨",
+  },
+  {
+    title: "Science partners & outreach",
+    detail:
+      "IAU/OAO kits, NA-ROAD binoculars, and the Nov 14 fundraiser (public lecture + museum tour) fuel hurricane Beryl relief for Grenada.",
+    tag: "Impact",
+    icon: "🛰️",
+  },
+];
+
 export default function Home() {
   const featuredPublication = [...publications].sort((a, b) => b.year - a.year)[0];
+  const curatedHighlights = [
+    "Fifth anniversary issue centering exercise and mental health.",
+    'Includes "Astronomy-Band-Aid for the Soul," Gabrielle Motilal interview, and bilingual reflections.',
+    "Pets & nature wellbeing plus a feel-good chemicals crossword keep curiosity high.",
+  ];
 
   return (
     <div className="space-y-[var(--pad-section)] pb-[var(--pad-section)]">
@@ -88,6 +119,8 @@ export default function Home() {
         <SectionBottomScrim />
       </section>
 
+      <AuroraFocusGate />
+
       <section className="section relative">
         <FadeReveal>
           <div className="container space-y-8">
@@ -129,55 +162,148 @@ export default function Home() {
       <section className="section relative">
         <FadeReveal>
           <div className="container">
-            <div className="pub-highlight">
-            <div className="pub-highlight__art" aria-hidden>
-              <div className="pub-highlight__beam" />
+            <div className="latest-pub-divider">
+              <p className="latest-pub-divider__label">Latest publication</p>
+              <span className="latest-pub-divider__line" aria-hidden />
+              <p className="latest-pub-divider__year">Issue {featuredPublication.year}</p>
             </div>
-            <div className="space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-200">
-                Featured · {featuredPublication.year}
-              </p>
-              <h2 className="font-serif text-3xl text-text-hi">
-                {featuredPublication.title}
-              </h2>
-              <p className="text-text-lo">{featuredPublication.blurb}</p>
-              <div className="pub-pills">
-                {featuredPublication.theme.map((tag) => (
-                  <span key={tag} className="pub-pill">
-                    {tag}
-                  </span>
-                ))}
+            <article className="latest-pub-card">
+              <div className="latest-pub-card__grid">
+                <div className="latest-pub-card__visual">
+                  <div className="latest-pub-card__cover">
+                    <Image
+                      src={featuredPublication.cover}
+                      alt={`${featuredPublication.title} cover`}
+                      width={280}
+                      height={360}
+                      className="latest-pub-card__cover-image"
+                    />
+                  </div>
+                  <span className="latest-pub-card__badge">Fifth-anniversary issue</span>
+                </div>
+
+                <div className="latest-pub-card__content">
+                  <h2 className="font-serif text-3xl text-text-hi leading-tight">
+                    {featuredPublication.title}
+                  </h2>
+                  <p className="text-text-lo leading-relaxed">
+                    {featuredPublication.blurb}
+                  </p>
+
+                  <div className="latest-pub-card__meta">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.3em] text-text-lo">Format</p>
+                      <p className="text-lg font-semibold text-text-hi">{featuredPublication.size}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.3em] text-text-lo">Mood</p>
+                      <p className="text-lg font-semibold text-text-hi">Joyful care</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.3em] text-text-lo">Availability</p>
+                      <p className="text-lg font-semibold text-text-hi">Digital + print</p>
+                    </div>
+                  </div>
+
+                  <ul className="latest-pub-card__highlights">
+                    {curatedHighlights.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+
+                  <div className="pub-pills">
+                    {featuredPublication.theme.map((tag) => (
+                      <span key={tag} className="pub-pill">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Link className="btn-cta" href={featuredPublication.href}>
+                      Download (PDF)
+                    </Link>
+                    <Link className="btn-ghost" href={highlightCTA.publications.href}>
+                      Browse library
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <Link className="btn-cta" href={featuredPublication.href}>
-                  Download (PDF)
-                </Link>
-                <Link className="btn-ghost" href={highlightCTA.publications.href}>
-                  Browse library
-                </Link>
-              </div>
-            </div>
-            </div>
+            </article>
           </div>
         </FadeReveal>
         <SectionBottomScrim height={"clamp(4.5rem, 12vw, 10rem)"} tint={0.18} />
       </section>
 
-      <section className="section relative">
+      <section className="section relative overflow-hidden">
         <FadeReveal>
-          <div className="container">
-            <div className="notes-card">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-lo">
-              Notes from the field
-            </p>
-            <ul className="mt-4 text-text-lo">
-              {org.notes.map((note) => (
-                <li key={note} className="flex gap-3 text-sm">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-brand-accent" />
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="container space-y-8">
+            <div className="notes-section-divider">
+              <span />
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-white/60">
+                Field dispatch log
+              </p>
+              <span />
+            </div>
+            <div className="grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
+              <div className="notes-hero">
+                <div className="notes-hero__glow" aria-hidden />
+                <div className="space-y-6 relative z-10">
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
+                      Notes from the field
+                    </p>
+                    <h2 className="font-serif text-3xl text-text-hi">
+                      Stories from our homes, partners, and volunteers.
+                    </h2>
+                    <p className="text-text-lo">
+                      These dispatches capture the offline rhythms of WISH—print magazines, volunteer drives, park refurbishments, and telescopes in little hands.
+                    </p>
+                  </div>
+
+                  <div className="notes-hero-grid">
+                    {fieldHighlights.map((highlight) => (
+                      <article key={highlight.title} className="notes-hero-grid__card">
+                        <span className="notes-hero-grid__tag">{highlight.tag}</span>
+                        <h3 className="font-serif text-xl text-text-hi">{highlight.title}</h3>
+                        <p className="text-sm text-text-lo leading-relaxed">{highlight.detail}</p>
+                        <span className="notes-hero-grid__icon" aria-hidden>
+                          {highlight.icon}
+                        </span>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <Link className="btn-ghost" href={highlightCTA.publications.href}>
+                      Publications library
+                    </Link>
+                    <Link className="btn-ghost" href="/get-involved#volunteer">
+                      Join a delivery drive
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="notes-panel">
+                <div className="notes-panel__header">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">
+                    Field journal
+                  </p>
+                  <p className="text-sm text-text-lo">
+                    Dispatches from every partner home and outreach drive.
+                  </p>
+                </div>
+
+                <div className="notes-panel__grid">
+                  {org.notes.map((note, idx) => (
+                    <article key={note} className="notes-panel__note" tabIndex={0}>
+                      <span className="notes-panel__note-index">{`0${idx + 1}`}</span>
+                      <p className="text-sm leading-relaxed text-text-lo">{note}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </FadeReveal>
