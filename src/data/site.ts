@@ -68,7 +68,7 @@ export const programs: Program[] = [
   },
   {
     id: "april-groceries",
-    title: "Groceries & Toiletries Drive",
+    title: "Groceries and Toiletries Drive",
     when: "March–April",
     summary:
       "Essential groceries and toiletries distributed to homes between the bigger giving seasons.",
