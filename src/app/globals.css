@@ -549,12 +549,23 @@ html.sr-enabled .sr-show {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0));
   opacity: 0.65;
 }
+.programs-scroll {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(0.75rem, 2vw, 1.3rem);
+  border-radius: 2rem;
+  background: rgba(5, 8, 24, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 20px 45px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+}
 .programs-grid {
   display: grid;
   gap: clamp(1.5rem, 2vw, 2.5rem);
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: stretch;
   grid-auto-rows: 1fr;
+  scroll-padding-inline: clamp(0.75rem, 2vw, 1.5rem);
 }
 .programs-card {
   position: relative;
@@ -647,6 +658,26 @@ html.sr-enabled .sr-show {
   color: rgba(255, 255, 255, 0.6);
 }
 
+@media (min-width: 1200px) {
+  .programs-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 1rem;
+    scroll-snap-type: x proximity;
+  }
+  .programs-grid {
+    overflow: visible;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 1fr);
+    gap: clamp(1.5rem, 2vw, 2.75rem);
+  }
+  .programs-card {
+    scroll-snap-align: start;
+    min-width: 220px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .programs-card,
   .programs-card__bullets li::before {
@@ -718,18 +749,9 @@ html.sr-enabled .sr-show {
   width: min(320px, 80vw);
   border-radius: 28px;
   overflow: hidden;
-  background: #05070f;
-  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.05), 0 25px 50px rgba(2, 6, 23, 0.75);
+  background: transparent;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(255, 255, 255, 0.04);
   isolation: isolate;
-}
-.latest-pub-card__cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.25), transparent 60%);
-  opacity: 0.3;
-  pointer-events: none;
-  mix-blend-mode: screen;
 }
 .latest-pub-card__cover-image {
   width: 100%;
@@ -740,37 +762,22 @@ html.sr-enabled .sr-show {
 .tilt-cover {
   width: 100%;
   height: 100%;
-  perspective: 1600px;
+  perspective: 1400px;
   border-radius: inherit;
   overflow: hidden;
-  background: linear-gradient(125deg, rgba(67, 118, 242, 0.08), transparent 65%);
 }
 .tilt-cover__inner {
   width: 100%;
   height: 100%;
   border-radius: inherit;
   transform-style: preserve-3d;
-  transition: transform 0.45s cubic-bezier(0.2, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
   transform: rotateX(var(--tilt-rotate-x, 0deg)) rotateY(var(--tilt-rotate-y, 0deg))
-    scale(1.03);
+    scale(var(--tilt-scale, 1));
   will-change: transform;
-  position: relative;
 }
-.tilt-cover__inner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--tilt-pointer-x, 50%) var(--tilt-pointer-y, 50%),
-    rgba(255, 255, 255, 0.75),
-    rgba(255, 255, 255, 0) 55%
-  );
-  mix-blend-mode: screen;
-  opacity: var(--tilt-pointer-intensity, 0);
-  transition: opacity 0.4s ease, background-position 0.35s ease;
-  filter: blur(1px);
+.tilt-cover:hover .tilt-cover__inner {
+  --tilt-scale: 1.08;
 }
 .latest-pub-card__badge {
   position: absolute;
@@ -891,9 +898,6 @@ html.sr-enabled .sr-show {
   .tilt-cover__inner {
     transition: none;
     transform: none;
-  }
-  .tilt-cover__inner::after {
-    display: none;
   }
 }
 

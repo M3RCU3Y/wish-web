@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { org, programs, publications, highlightCTA } from "@/data/site";
 import { GlassCard } from "@/components/ui/glass-card";
 import { SectionBottomScrim } from "@/components/section-scrim";
 import { FadeReveal } from "@/components/reveal";
 import type { CSSProperties } from "react";
+import { TiltCover } from "@/components/tilt-cover";
 
 const heroStats = [
   {
@@ -143,31 +143,33 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="programs-grid">
-              {programs.map((program, idx) => {
-                const accentColor = programAccents[idx % programAccents.length];
-                const style = { "--program-card-accent": accentColor } as CSSProperties;
+            <div className="programs-scroll">
+              <div className="programs-grid">
+                {programs.map((program, idx) => {
+                  const accentColor = programAccents[idx % programAccents.length];
+                  const style = { "--program-card-accent": accentColor } as CSSProperties;
 
-                return (
-                <FadeReveal key={program.id} delay={idx * 0.08} amount={0.25}>
-                  <article className="programs-card" style={style}>
-                    <div className="programs-card__header">
-                      <h3 className="font-serif text-2xl text-text-hi">{program.title}</h3>
-                      <span className="programs-card__when">{program.when}</span>
-                    </div>
-                    <div className="programs-card__body">
-                      <p className="programs-card__summary">{program.summary}</p>
-                      <ul className="programs-card__bullets">
-                        {program.bullets.map((bullet) => (
-                          <li key={bullet}>{bullet}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="programs-card__tagline">Seasonal care in motion</div>
-                  </article>
-                </FadeReveal>
-                );
-              })}
+                  return (
+                    <FadeReveal key={program.id} delay={idx * 0.08} amount={0.25}>
+                      <article className="programs-card" style={style}>
+                        <div className="programs-card__header">
+                          <h3 className="font-serif text-2xl text-text-hi">{program.title}</h3>
+                          <span className="programs-card__when">{program.when}</span>
+                        </div>
+                        <div className="programs-card__body">
+                          <p className="programs-card__summary">{program.summary}</p>
+                          <ul className="programs-card__bullets">
+                            {program.bullets.map((bullet) => (
+                              <li key={bullet}>{bullet}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="programs-card__tagline">Seasonal care in motion</div>
+                      </article>
+                    </FadeReveal>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </FadeReveal>
@@ -184,16 +186,15 @@ export default function Home() {
             </div>
             <article className="latest-pub-card">
               <div className="latest-pub-card__grid">
-                <div className="latest-pub-card__visual">
-                  <div className="latest-pub-card__cover">
-                    <Image
-                      src={featuredPublication.cover}
-                      alt={`${featuredPublication.title} cover`}
-                      width={280}
-                      height={360}
-                      className="latest-pub-card__cover-image"
-                    />
-                  </div>
+                  <div className="latest-pub-card__visual">
+                    <div className="latest-pub-card__cover">
+                      <TiltCover
+                        src={featuredPublication.cover}
+                        alt={`${featuredPublication.title} cover`}
+                        width={280}
+                        height={360}
+                      />
+                    </div>
                   <span className="latest-pub-card__badge">Fifth-anniversary issue</span>
                 </div>
 

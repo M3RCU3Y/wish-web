@@ -90,7 +90,7 @@ export function StarfieldConstellation({
       maxLife: number;
       size: number;
     };
-    let meteors: Meteor[] = [];
+    const meteors: Meteor[] = [];
 
     const ro = new ResizeObserver((entries) => {
       const rect = entries[0].contentRect;
@@ -361,7 +361,24 @@ export function StarfieldConstellation({
       media.removeEventListener("change", onMedia);
       ro.disconnect();
     };
-  }, [density, color, lineColor, linkDistance, fps, blend, shootingStars, aurora, respectReducedMotion]);
+  }, [
+    aurora,
+    baseDrift,
+    blend,
+    color,
+    constellations,
+    density,
+    fps,
+    glow,
+    linkDistance,
+    lineColor,
+    maxMeteors,
+    meteorRate,
+    respectReducedMotion,
+    shootingStars,
+    twinkleAmp,
+    waveAmp,
+  ]);
 
   return (
     <div

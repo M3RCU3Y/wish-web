@@ -68,11 +68,22 @@ export function ViewportFX() {
   // Bottom overlay fog + blur
   return (
     <div aria-hidden className="pointer-events-none fixed inset-x-0 bottom-0 z-20">
-      <div className="relative h-40 sm:h-48 md:h-56 [mask-image:linear-gradient(to_top,black,transparent_70%)]">
-        {/* Backdrop blur with very light tint and gradient combined (less glow, more blur) */}
-        <div className="absolute inset-x-0 bottom-0 h-full frost-blur supports-[backdrop-filter]:bg-white/3 bg-white/0 bg-gradient-to-t from-indigo-900/22 via-indigo-900/10 to-transparent" />
-        {/* Soft edge feather */}
-        <div className="absolute inset-x-0 -bottom-1 h-8 bg-gradient-to-t from-black/12 to-transparent" />
+      <div className="relative h-[clamp(90px,10vw,120px)] sm:h-[clamp(140px,7vw,180px)] overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            maskImage:
+              "linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.25) 40%, transparent 85%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.25) 40%, transparent 85%)",
+          }}
+        >
+          {/* Backdrop blur backdrop + tint */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 frost-blur bg-gradient-to-t from-indigo-950/75 via-indigo-950/25 to-transparent supports-[backdrop-filter]:bg-white/0" />
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 to-transparent" />
+          </div>
+        </div>
         {/* Fine grain to avoid banding */}
         <div className="absolute inset-0 frost-noise opacity-20" />
       </div>
