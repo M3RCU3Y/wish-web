@@ -661,6 +661,7 @@ html.sr-enabled .sr-show {
 
 
 
+
 .latest-pub-divider {
   display: flex;
   align-items: center;
@@ -717,9 +718,7 @@ html.sr-enabled .sr-show {
   width: min(320px, 80vw);
   border-radius: 28px;
   overflow: hidden;
-  background: radial-gradient(circle at 30% 20%, rgba(117, 180, 255, 0.45), transparent 55%),
-    radial-gradient(circle at 70% 60%, rgba(135, 106, 255, 0.35), transparent 60%),
-    #05070f;
+  background: #05070f;
   box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.05), 0 25px 50px rgba(2, 6, 23, 0.75);
   isolation: isolate;
 }
@@ -727,16 +726,51 @@ html.sr-enabled .sr-show {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-  opacity: 0.25;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.25), transparent 60%);
+  opacity: 0.3;
   pointer-events: none;
-  transform: translateX(-130%);
-  animation: coverShimmer 8s linear infinite;
+  mix-blend-mode: screen;
 }
 .latest-pub-card__cover-image {
   width: 100%;
   height: auto;
   display: block;
+  object-fit: cover;
+}
+.tilt-cover {
+  width: 100%;
+  height: 100%;
+  perspective: 1600px;
+  border-radius: inherit;
+  overflow: hidden;
+  background: linear-gradient(125deg, rgba(67, 118, 242, 0.08), transparent 65%);
+}
+.tilt-cover__inner {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 1, 0.3, 1);
+  transform: rotateX(var(--tilt-rotate-x, 0deg)) rotateY(var(--tilt-rotate-y, 0deg))
+    scale(1.03);
+  will-change: transform;
+  position: relative;
+}
+.tilt-cover__inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--tilt-pointer-x, 50%) var(--tilt-pointer-y, 50%),
+    rgba(255, 255, 255, 0.75),
+    rgba(255, 255, 255, 0) 55%
+  );
+  mix-blend-mode: screen;
+  opacity: var(--tilt-pointer-intensity, 0);
+  transition: opacity 0.4s ease, background-position 0.35s ease;
+  filter: blur(1px);
 }
 .latest-pub-card__badge {
   position: absolute;
@@ -821,18 +855,6 @@ html.sr-enabled .sr-show {
   }
 }
 
-@keyframes coverShimmer {
-  0% {
-    transform: translateX(-130%);
-  }
-  50% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(130%);
-  }
-}
-
 @keyframes pulseBadge {
   0%,
   100% {
@@ -862,10 +884,16 @@ html.sr-enabled .sr-show {
 
 @media (prefers-reduced-motion: reduce) {
   .latest-pub-card,
-  .latest-pub-card__cover::after,
   .latest-pub-card__badge,
   .latest-pub-card__highlights li::before {
     animation: none;
+  }
+  .tilt-cover__inner {
+    transition: none;
+    transform: none;
+  }
+  .tilt-cover__inner::after {
+    display: none;
   }
 }
 
