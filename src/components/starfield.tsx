@@ -385,7 +385,7 @@ export function StarfieldConstellation({
       ref={containerRef}
       aria-hidden
       className={[
-        "pointer-events-none absolute inset-0 overflow-hidden rounded-full",
+        "pointer-events-none absolute inset-0 overflow-hidden rounded-none",
         className || "",
       ].join(" ")}
     >

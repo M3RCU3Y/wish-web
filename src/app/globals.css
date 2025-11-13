@@ -634,6 +634,7 @@ html.sr-enabled .sr-show {
 .programs-card__bullets li {
   font-size: 0.9rem;
   position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 .programs-card__bullets li::before {
   content: "";
@@ -645,6 +646,15 @@ html.sr-enabled .sr-show {
   border-radius: 50%;
   background: var(--program-card-accent, #5dd1ff);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.programs-card__bullets li:hover {
+  color: #fff;
+  transform: translateX(4px);
+}
+.programs-card__bullets li:hover::before {
+  transform: scale(1.2);
+  opacity: 0.9;
 }
 .programs-card__tagline {
   margin-top: auto;
@@ -795,6 +805,7 @@ html.sr-enabled .sr-show {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
 }
 .latest-pub-card__meta {
   display: grid;
@@ -804,6 +815,26 @@ html.sr-enabled .sr-show {
 }
 .latest-pub-card__meta p {
   margin: 0;
+}
+.latest-pub-card__meta div {
+  position: relative;
+  padding: 0.9rem 0.5rem;
+  overflow: hidden;
+}
+.latest-pub-card__meta div::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 75%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: scale(0.95);
+}
+.latest-pub-card__meta div:hover::after {
+  opacity: 0.35;
+  transform: scale(1.05);
 }
 .latest-pub-card__highlights {
   list-style: none;
@@ -819,6 +850,8 @@ html.sr-enabled .sr-show {
   padding-left: 1.5rem;
   font-size: 0.95rem;
   line-height: 1.5;
+  --animation-order: 0;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 .latest-pub-card__highlights li::before {
   content: "";
@@ -831,6 +864,7 @@ html.sr-enabled .sr-show {
   background: linear-gradient(180deg, #5dd8ff, #a178ff);
   transform: translateY(-50%);
   animation: pulseDot 8s ease-in-out infinite;
+  animation-delay: calc(var(--animation-order, 0) * 0.35s);
 }
 .latest-pub-card__highlights li:first-child::before {
   transform: translateY(-50%) scale(0.9);
@@ -841,11 +875,25 @@ html.sr-enabled .sr-show {
 .latest-pub-card__highlights li:last-child::before {
   opacity: 0.8;
 }
+.latest-pub-card__highlights li:hover {
+  color: white;
+  transform: translateX(4px);
+}
 .latest-pub-card__meta .text-text-lo {
   color: var(--text-lo);
 }
 .latest-pub-card__meta .text-text-hi {
   color: var(--text-hi);
+}
+
+.latest-pub-card__highlights li:nth-child(1) {
+  --animation-order: 0;
+}
+.latest-pub-card__highlights li:nth-child(2) {
+  --animation-order: 1;
+}
+.latest-pub-card__highlights li:nth-child(3) {
+  --animation-order: 2;
 }
 
 @keyframes floatPulse {
@@ -896,6 +944,9 @@ html.sr-enabled .sr-show {
   .tilt-cover__inner {
     transition: none;
     transform: none;
+  }
+  .latest-pub-card__meta div::after {
+    transition: none;
   }
 }
 
@@ -956,6 +1007,8 @@ html.sr-enabled .sr-show {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  position: relative;
+  animation: pillDrift 20s ease-in-out infinite;
 }
 .pub-pill {
   border-radius: 999px;
@@ -965,4 +1018,53 @@ html.sr-enabled .sr-show {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-lo);
+  background: rgba(255, 255, 255, 0.02);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.pub-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(93, 209, 255, 0.25), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.pub-pill:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+  transform: translateY(-2px) scale(1.02);
+}
+.pub-pill:hover::after {
+  opacity: 1;
+}
+.pub-pill:not(:hover) {
+  animation: pillPulse 8s ease-in-out infinite;
+}
+.pub-pill:nth-child(odd) {
+  animation-delay: 0.3s;
+}
+.pub-pill:nth-child(even) {
+  animation-delay: 0.6s;
+}
+
+@keyframes pillPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.01);
+  }
+}
+
+@keyframes pillDrift {
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(-6px);
+  }
 }
