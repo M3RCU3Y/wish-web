@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+type StarfieldQuality = "auto" | "high" | "medium" | "low";
+
 type StarfieldProps = {
   className?: string;
   density?: number;
@@ -27,26 +29,32 @@ type StarfieldProps = {
   maxMeteors?: number;
   /** Toggle constellation links */
   constellations?: boolean;
+  /** Downshift effects on low-power devices */
+  quality?: StarfieldQuality;
+  /** Skip frames when the canvas is off screen */
+  pauseWhenOffscreen?: boolean;
 };
 
 export function StarfieldConstellation({
   className,
-  density = 0.1,
+  density = 0.08,
   color = "rgba(255,255,255,0.85)",
   lineColor = "rgba(148, 163, 184, 0.15)",
   linkDistance = 90,
-  fps = 48,
+  fps = 32,
   blend = "normal",
   shootingStars = true,
   aurora = true,
   respectReducedMotion = true,
   baseDrift = 1,
-  waveAmp = 1.6,
-  twinkleAmp = 1,
-  glow = 1,
-  meteorRate = 0.0035,
+  waveAmp = 1.4,
+  twinkleAmp = 0.9,
+  glow = 0.9,
+  meteorRate = 0.003,
   maxMeteors = 2,
   constellations = true,
+  quality = "auto",
+  pauseWhenOffscreen = true,
 }: StarfieldProps) {
   const ref = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -62,7 +70,10 @@ export function StarfieldConstellation({
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduceMotion = respectReducedMotion && media.matches;
-    const onMedia = () => (reduceMotion = respectReducedMotion && media.matches);
+    const onMedia = () => {
+      reduceMotion = respectReducedMotion && media.matches;
+      spawnStars();
+    };
     media.addEventListener("change", onMedia);
 
     let width = 0,
@@ -92,6 +103,26 @@ export function StarfieldConstellation({
     };
     const meteors: Meteor[] = [];
 
+    let renderConstellations = constellations;
+    let renderAurora = aurora;
+    let renderMeteors = shootingStars;
+    let qualityScale = 1;
+
+    const getQualityScale = () => {
+      if (quality === "low") return 0.55;
+      if (quality === "medium") return 0.75;
+      if (quality === "high") return 1;
+      const smallViewport = window.matchMedia("(max-width: 900px)").matches;
+      const lowPower =
+        typeof navigator !== "undefined" &&
+        typeof navigator.hardwareConcurrency === "number" &&
+        navigator.hardwareConcurrency <= 4;
+      return smallViewport || lowPower ? 0.7 : 1;
+    };
+
+    let frameInterval = 1000 / Math.max(20, fps);
+    let isVisible = true;
+
     const ro = new ResizeObserver((entries) => {
       const rect = entries[0].contentRect;
       width = Math.floor(rect.width);
@@ -108,15 +139,29 @@ export function StarfieldConstellation({
     ro.observe(host);
 
     function spawnStars() {
-      const area = width * height;
-      const total = Math.max(10, Math.floor((area / 10000) * density * 120));
-      const nearCount = Math.floor(total * 0.4);
+      qualityScale = getQualityScale();
+      const dprPenalty = dpr > 1.15 ? 0.84 : 1;
+      const area = Math.max(1, width * height);
+      const total = Math.max(
+        45,
+        Math.min(
+          520,
+          Math.floor((area / 16000) * density * 36 * qualityScale * dprPenalty),
+        ),
+      );
+      const nearCount = Math.floor(total * 0.42);
       const farCount = total - nearCount;
+      renderMeteors = shootingStars && !reduceMotion && qualityScale > 0.55;
+      renderAurora = aurora && qualityScale > 0.6;
+      renderConstellations = constellations && qualityScale > 0.65 && nearCount < 260;
+      const effectiveFPS = Math.max(20, fps * (reduceMotion ? 0.65 : 1) * (0.7 + qualityScale * 0.45));
+      frameInterval = 1000 / effectiveFPS;
+
       const mk = (count: number, near: boolean) =>
         new Array(count).fill(0).map(() => {
           const rCss = (near ? 0.9 : 0.7) + Math.random() * (near ? 0.8 : 0.6);
           const r = rCss * dpr;
-          const speed = (near ? 0.12 : 0.06) * dpr * baseDrift;
+          const speed = (near ? 0.11 : 0.06) * dpr * baseDrift * (0.8 + qualityScale * 0.35);
           const s: Star = {
             x: Math.random() * width * dpr,
             y: Math.random() * height * dpr,
@@ -133,10 +178,20 @@ export function StarfieldConstellation({
     }
 
     let last = 0;
-    const frameInterval = 1000 / fps;
     let raf = 0;
 
+    const startLoop = () => {
+      if (!raf && isVisible && !document.hidden) {
+        last = 0;
+        raf = requestAnimationFrame(loop);
+      }
+    };
+
     function loop(t: number) {
+      if (!isVisible) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(loop);
       if (t - last < frameInterval) return;
       last = t;
@@ -154,46 +209,41 @@ export function StarfieldConstellation({
 
       const time = t * 0.001;
       const motionScale = reduceMotion ? 0.6 : 1;
-      const waveX = (Math.sin(time * 0.25) * 6 + Math.sin(time * 0.71) * 2.5) * dpr * waveAmp * 0.5 * motionScale;
-      const waveY = (Math.cos(time * 0.21) * 4 + Math.sin(time * 0.57) * 1.5) * dpr * waveAmp * 0.5 * motionScale;
+      const waveScale = waveAmp * (0.5 + qualityScale * 0.5);
+      const waveX = (Math.sin(time * 0.25) * 6 + Math.sin(time * 0.71) * 2.5) * dpr * waveScale * 0.45 * motionScale;
+      const waveY = (Math.cos(time * 0.21) * 4 + Math.sin(time * 0.57) * 1.5) * dpr * waveScale * 0.45 * motionScale;
+      const twinkleScale = twinkleAmp * (0.6 + qualityScale * 0.4);
+      const glowScale = glow * (0.55 + qualityScale * 0.5);
 
       // Stars
       const drawLayer = (stars: Star[], alpha = 1) => {
         context.globalAlpha = alpha;
+        context.save();
+        context.shadowColor = color;
         for (const s of stars) {
           s.x += s.vx * motionScale;
           s.y += s.vy * motionScale;
           if (s.x < 0) s.x += W; else if (s.x > W) s.x -= W;
           if (s.y < 0) s.y += H; else if (s.y > H) s.y -= H;
-          s.twinkle += (reduceMotion ? 0.003 : 0.006) + Math.random() * 0.0035;
-          const tw = 0.7 + Math.sin(s.twinkle * Math.PI * 2) * 0.3 * twinkleAmp;
+          s.twinkle += (reduceMotion ? 0.003 : 0.006) + Math.random() * 0.002;
+          const tw = 0.78 + Math.sin(s.twinkle * Math.PI * 2) * 0.25 * twinkleScale;
           const dx = s.x + waveX;
           const dy = s.y + waveY;
-          // additive glow pass
-          const prevComp = context.globalCompositeOperation;
-          context.globalCompositeOperation = "lighter";
-          const halo = context.createRadialGradient(dx, dy, 0, dx, dy, s.r * (4.0 + tw * 1.0));
-          halo.addColorStop(0, `rgba(255,255,255,${0.22 * glow})`);
-          halo.addColorStop(1, "rgba(255,255,255,0)");
-          context.fillStyle = halo;
-          context.beginPath();
-          context.arc(dx, dy, s.r * (4.0 + tw * 1.0), 0, Math.PI * 2);
-          context.fill();
-          context.globalCompositeOperation = prevComp;
-          // core
+          context.shadowBlur = s.r * 5.5 * glowScale;
           context.fillStyle = color;
           context.beginPath();
-          const pulse = 0.92 + Math.sin(time * 1.8 + s.twinkle * 6.283) * 0.12 * twinkleAmp;
-          context.arc(dx, dy, s.r * (0.95 + tw * 0.25) * pulse, 0, Math.PI * 2);
+          const pulse = 0.9 + Math.sin(time * 1.8 + s.twinkle * 6.283) * 0.12 * twinkleScale;
+          context.arc(dx, dy, s.r * (0.95 + tw * 0.28) * pulse, 0, Math.PI * 2);
           context.fill();
         }
         context.globalAlpha = 1;
+        context.restore();
       };
       drawLayer(starsFar, 0.85);
       drawLayer(starsNear, 1);
 
       // Meteors
-      if (shootingStars && !reduceMotion && Math.random() < meteorRate && meteors.length < maxMeteors) {
+      if (renderMeteors && Math.random() < meteorRate * qualityScale && meteors.length < maxMeteors) {
         const startX = Math.random() * W * 0.3 - W * 0.15;
         const startY = Math.random() * H * 0.35;
         const speed = (2.5 + Math.random() * 3.5) * dpr;
@@ -247,72 +297,65 @@ export function StarfieldConstellation({
       }
 
       // Constellation links
-      if (constellations) {
-      const cell = Math.max(40 * dpr, 1);
-      const cols = Math.ceil(canvas!.width / cell);
-      const rows = Math.ceil(canvas!.height / cell);
-      const buckets: number[][] = Array.from({ length: cols * rows }, () => []);
-      const all = starsNear.concat(starsFar);
-      for (let i = 0; i < all.length; i++) {
-        const s = all[i];
-        const c = Math.floor(s.x / cell);
-        const r = Math.floor(s.y / cell);
-        const idx = r * cols + c;
-        if (buckets[idx]) buckets[idx].push(i);
-      }
-      context.strokeStyle = lineColor;
-      context.lineWidth = Math.max(0.5 * dpr, 0.35);
-      const maxDist = linkDistance * dpr;
-      const maxDist2 = maxDist * maxDist;
-      const degree: number[] = new Array(all.length).fill(0);
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
+      if (renderConstellations && starsNear.length && starsNear.length < 260) {
+        const cell = Math.max(55 * dpr, 1);
+        const cols = Math.ceil(canvas!.width / cell);
+        const rows = Math.ceil(canvas!.height / cell);
+        const buckets: number[][] = Array.from({ length: cols * rows }, () => []);
+        for (let i = 0; i < starsNear.length; i++) {
+          const s = starsNear[i];
+          const c = Math.floor(s.x / cell);
+          const r = Math.floor(s.y / cell);
           const idx = r * cols + c;
-          const neighborhood: number[] = [];
-          for (let rr = r - 1; rr <= r + 1; rr++) {
-            for (let cc = c - 1; cc <= c + 1; cc++) {
-              const j = rr * cols + cc;
-              if (rr >= 0 && cc >= 0 && rr < rows && cc < cols && buckets[j]) {
-                neighborhood.push(...buckets[j]);
+          if (buckets[idx]) buckets[idx].push(i);
+        }
+        context.strokeStyle = lineColor;
+        context.lineWidth = Math.max(0.5 * dpr, 0.35);
+        const maxDist = linkDistance * dpr * (0.85 + qualityScale * 0.2);
+        const maxDist2 = maxDist * maxDist;
+        const degree: number[] = new Array(starsNear.length).fill(0);
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const idx = r * cols + c;
+            const neighborhood: number[] = [];
+            for (let rr = r - 1; rr <= r + 1; rr++) {
+              for (let cc = c - 1; cc <= c + 1; cc++) {
+                const j = rr * cols + cc;
+                if (rr >= 0 && cc >= 0 && rr < rows && cc < cols && buckets[j]) {
+                  neighborhood.push(...buckets[j]);
+                }
+              }
+            }
+            const ids = buckets[idx];
+            for (const i of ids) {
+              if (degree[i] >= 2) continue;
+              const a = starsNear[i];
+              let links = 0;
+              for (const j of neighborhood) {
+                if (i >= j || degree[j] >= 2 || links >= 2) continue;
+                const b = starsNear[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const d2 = dx * dx + dy * dy;
+                if (d2 > maxDist2) continue;
+                const alpha = Math.max(0.08, 1 - d2 / maxDist2) * 0.32;
+                context.globalAlpha = alpha;
+                context.beginPath();
+                context.moveTo(a.x + waveX, a.y + waveY);
+                context.lineTo(b.x + waveX, b.y + waveY);
+                context.stroke();
+                degree[i]++;
+                degree[j]++;
+                links++;
               }
             }
           }
-          const ids = buckets[idx];
-          for (const i of ids) {
-            if (degree[i] >= 2) continue;
-            const a = all[i];
-            const candidates: { j: number; d2: number }[] = [];
-            for (const j of neighborhood) {
-              if (i >= j || degree[j] >= 2) continue;
-              const b = all[j];
-              const dx = a.x - b.x;
-              const dy = a.y - b.y;
-              const d2 = dx * dx + dy * dy;
-              if (d2 < maxDist2) candidates.push({ j, d2 });
-            }
-            candidates.sort((m, n) => m.d2 - n.d2);
-            const take = Math.min(2 - degree[i], candidates.length);
-            for (let k = 0; k < take; k++) {
-              const { j, d2 } = candidates[k];
-              const b = all[j];
-              const alpha = Math.max(0.08, 1 - d2 / maxDist2) * 0.35;
-              context.globalAlpha = alpha;
-              context.beginPath();
-              context.moveTo(a.x + waveX, a.y + waveY);
-              context.lineTo(b.x + waveX, b.y + waveY);
-              context.stroke();
-              degree[i]++;
-              degree[j]++;
-              if (degree[i] >= 2) break;
-            }
-          }
         }
-      }
-      context.globalAlpha = 1;
+        context.globalAlpha = 1;
       }
 
       // Aurora sweep overlay
-      if (aurora) {
+      if (renderAurora) {
         const prev = context.globalCompositeOperation;
         context.globalCompositeOperation = "screen";
         const cx = (Math.sin(time * 0.15) * 0.5 + 0.5) * W;
@@ -340,11 +383,13 @@ export function StarfieldConstellation({
       }
     }
 
-    raf = requestAnimationFrame(loop);
-
     const onVis = () => {
-      if (document.hidden) cancelAnimationFrame(raf);
-      else raf = requestAnimationFrame(loop);
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else {
+        startLoop();
+      }
     };
     document.addEventListener("visibilitychange", onVis);
 
@@ -354,12 +399,29 @@ export function StarfieldConstellation({
     };
     window.addEventListener("resize", onDpr, { passive: true });
 
+    const observer = pauseWhenOffscreen
+      ? new IntersectionObserver(
+          (entries) => {
+            isVisible = entries[0]?.isIntersecting ?? true;
+            if (isVisible) startLoop();
+            else if (raf) {
+              cancelAnimationFrame(raf);
+              raf = 0;
+            }
+          },
+          { rootMargin: "20%" },
+        )
+      : null;
+    observer?.observe(host);
+    startLoop();
+
     return () => {
       cancelAnimationFrame(raf);
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("resize", onDpr);
       media.removeEventListener("change", onMedia);
       ro.disconnect();
+      observer?.disconnect();
     };
   }, [
     aurora,
@@ -376,6 +438,8 @@ export function StarfieldConstellation({
     meteorRate,
     respectReducedMotion,
     shootingStars,
+    pauseWhenOffscreen,
+    quality,
     twinkleAmp,
     waveAmp,
   ]);

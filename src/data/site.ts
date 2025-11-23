@@ -2,6 +2,7 @@ export type TeamMember = {
   role: string;
   name: string;
   bio?: string;
+  image?: string;
 };
 
 export const org = {
@@ -33,14 +34,16 @@ export const org = {
     {
       role: "CEO & Founder",
       name: "Prof. Shirin Haque",
+      image: "/team/shirin-haque.jpg",
       bio: "Astronomer; Anthony N. Sabga Laureate for Excellence in Science & Technology (2020).",
     },
-    { role: "Treasurer", name: "Mr. Deva Sharma", bio: "Architect." },
-    { role: "Secretary", name: "Ms. Darnelle Hamilton", bio: "Science teacher." },
+    { role: "Treasurer", name: "Mr. Deva Sharma", bio: "Architect.", image: "/team/deva-sharma.jpg" },
+    { role: "Secretary", name: "Ms. Darnelle Hamilton", bio: "Science teacher.", image: "/team/darnelle-hamilton.jpg" },
     {
       role: "Public Relations Officer",
       name: "Ms. Bhanumattee Ramdhanie",
       bio: "Analytical chemist / research student.",
+      image: "/team/bhanumattee-ramdhanie.jpg",
     },
   ],
 };
