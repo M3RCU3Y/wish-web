@@ -43,16 +43,9 @@ export function TiltCover({ src, alt, width, height }: TiltCoverProps) {
       update(event.matches);
     };
 
-    if ("addEventListener" in mediaQuery) {
-      mediaQuery.addEventListener("change", listener);
-      return () => {
-        mediaQuery.removeEventListener("change", listener);
-      };
-    }
-
-    mediaQuery.addListener(listener);
+    mediaQuery.addEventListener("change", listener);
     return () => {
-      mediaQuery.removeListener(listener);
+      mediaQuery.removeEventListener("change", listener);
     };
   }, [resetTilt]);
 
